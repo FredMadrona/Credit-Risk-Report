@@ -51,16 +51,22 @@ class EmployeeResource extends Resource
                     Forms\Components\Select::make('employee_type')
                     ->required()
                     ->options([
-                    'Full-time' => 'Full-time',
-                    'Part-time' => 'Part-time',
-                    'Intern' => 'Intern'    
+                    'Regular' => 'Regular',
+                    'Probationary' => 'Probationary',   
                 ]),
                 Forms\Components\Select::make('job_position')
                 ->required()
                 ->options([
-                'Software Engineer' => 'Software Engineer',
-                'Human Resource' => 'Human Resource',
-                'Marketing' => 'Marketing'    
+                'Associate' => 'Associate',
+                'Department Head' => 'Department Head',
+                'CEO' => 'CEO',
+                'COO' => 'COO',
+                'Vice President' => 'Vice President',
+                'Deputy Head' => 'Deputy Head',
+                'Area Head' => 'Area Head',
+                'Unit Head' => 'Unit Head',
+                'Vice President' => 'Vice President',
+
             ]),
             Forms\Components\DatePicker::make('birthday')->required(),
             Forms\Components\DatePicker::make('hire_date')->required(),
@@ -74,17 +80,14 @@ class EmployeeResource extends Resource
             ->searchable(),
             Tables\Columns\TextColumn::make('branch.name'),
             Tables\Columns\TextColumn::make('department.name'),
-            Tables\Columns\TextColumn::make('employee_type')
-            ->sortable(),
-            Tables\Columns\TextColumn::make('job_position')
-            ->searchable(),
+            Tables\Columns\TextColumn::make('job_position')->searchable(),
+            Tables\Columns\TextColumn::make('department.name'),
         ])
             ->filters([
                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
