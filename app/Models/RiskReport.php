@@ -1,11 +1,14 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 class RiskReport extends Model
 {
+
+
     protected $fillable = [
         'risk_number', 'client_id', 'type', 'pn_number', 'branch', 'segment', 'frp_class',
         'applied_load', 'date_rated', 'score', 'risk', 'risk_desc', 'next_review_date', 'remarks'
@@ -23,7 +26,12 @@ class RiskReport extends Model
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(Client::class, 'client_id', 'id');
+        return $this->belongsTo(Client::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
     }
     
 }

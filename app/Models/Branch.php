@@ -15,4 +15,9 @@ class Branch extends Model
     {
         return $this->hasMany(Employee::class);
     }
+
+    public function riskReport()
+    {
+        return $this->hasMany(RiskReport::class);
+    }
 }

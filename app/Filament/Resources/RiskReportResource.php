@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Filament\Resources;
+
 use App\Models\RiskReport;
+use Filament\Forms\Components\Select;
 use App\Filament\Resources\RiskReportResource\Pages;
 use App\Filament\Resources\RiskReportResource\RelationManagers;
 use Filament\Forms;
@@ -24,19 +26,13 @@ class RiskReportResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('risk_number')
                  ->label('Risk Number')
-                 ->disabled()
-                 ->required(),
+                 ->dehydrated(false)
+                 ->disabled(),
                  Forms\Components\Select::make('client_id')
-                    ->relationship('client', titleAttribute:'full_name')
+                    ->relationship(name:'client', titleAttribute:'first_name')
                     ->searchable()
                     ->preload()
-                    ->required()
-                    ->createOptionForm([
-                        Forms\Components\TextInput::make('full_name')
-                            ->label('Client name')
-                            ->required()
-                            ->maxlength(255)
-                    ]),
+                    ->required(),
                 Forms\Components\Select::make('type')
                     ->required()
                     ->options([
@@ -47,22 +43,16 @@ class RiskReportResource extends Resource
                     ->label('PN Number')
                     ->required(),
                 Forms\Components\Select::make('branch_id')
-                    ->relationship('branch', 'name')
+                    ->relationship(name:'branch', titleAttribute:'name')
                     ->searchable()
-                    ->preload()
-                    ->createOptionForm([
-                        Forms\Components\TextInput::make('name')
-                            ->label('Name')
-                            ->required()
-                            ->maxlength(255) 
-                    ]),
+                    ->preload(),
                 Forms\Components\TextInput::make('segment')
                     ->label('Segment')
                     ->required(),
                 Forms\Components\TextInput::make('frp_class')
                     ->label('FRP Class')
                     ->required(),
-                Forms\Components\TextInput::make('applied_load')
+                Forms\Components\TextInput::make('applied_loan')
                     ->label('Applied Loan')
                     ->numeric()
                     ->step(0.01)
@@ -70,7 +60,7 @@ class RiskReportResource extends Resource
                 Forms\Components\DatePicker::make('date_rated')
                     ->required()
                     ->maxDate(now()),
-                Forms\Components\TextInput::make('Score')
+                Forms\Components\TextInput::make('score')
                     ->label('Score')
                     ->numeric()
                     ->step(0.01)
@@ -90,7 +80,7 @@ class RiskReportResource extends Resource
                         'HIGH RISK' => 'HIGH RISK',
                         'N/A' => 'N/A',
                     ]),
-                Forms\Components\DatePicker::make('date_rated')
+                Forms\Components\DatePicker::make('next_review_date')
                     ->label('Next Review Date')
                     ->required(),
                 Forms\Components\Textarea::make('remarks')

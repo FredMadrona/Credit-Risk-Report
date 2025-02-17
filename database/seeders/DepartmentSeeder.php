@@ -11,10 +11,12 @@ class DepartmentSeeder extends Seeder
     public function run()
     {
         $departments = [
-            ['department_name' => 'Finance'],
-            ['department_name' => 'Human Resources'],
-            ['department_name' => 'IT'],
-            ['department_name' => 'Marketing'],
+            ['name' => 'Compliance Department'],
+            ['name' => 'Internal Audit Department'],
+            ['name' => 'Finance Department'],
+            ['name' => 'General Services Department'],
+            ['name' => 'Information Technology Department'],
+
         ];
 
         Department::insert($departments);

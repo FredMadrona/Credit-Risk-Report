@@ -11,9 +11,16 @@ class BranchSeeder extends Seeder
     public function run()
     {
         $branches = [
-            ['branch_name' => 'Main Branch'],
-            ['branch_name' => 'East Branch'],
-            ['branch_name' => 'West Branch'],
+            ['name' => 'Daraga Office'],
+            ['name' => 'Legazpi Office'],
+            ['name' => 'Camalig Office'],
+            ['name' => 'Tabaco Office'],
+            ['name' => 'Polangui Office'],
+            ['name' => 'Sorsogon Office'],
+            ['name' => 'Masbate Office'],
+
+
+
         ];
 
         Branch::insert($branches);
