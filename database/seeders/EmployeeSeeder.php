@@ -15,8 +15,8 @@ class EmployeeSeeder extends Seeder
                 'name' => 'John Doe',
                 'branch_id' => 1,  // ✅ Correct column
                 'department_id' => 3,  // ✅ Correct column
-                'employee_type_id' => 'Part-time',  // ✅ Correct column
-                'job_position_id' => 'Human Resource',  // ✅ Correct column
+                'employee_type' => 'Full-time',
+                'job_position' => 'Human Resource',  // ✅ Correct column
                 'birthday' => '1990-05-15',
                 'hire_date' => '2020-06-01',
              ],
@@ -24,8 +24,8 @@ class EmployeeSeeder extends Seeder
                 'name' => 'Jane Smith',
                 'branch_id' => 2,  // ✅ Correct column
                 'department_id' => 1,  // ✅ Correct column
-                'employee_type_id' => 'Full-time',  // ✅ Correct column
-                'job_position_id' => 'Software Engineer',
+                'employee_type' => 'Part-time',
+                'job_position' => 'Software Engineer',
                 'birthday' => '1985-11-20',
                 'hire_date' => '2018-03-12',
             ],
