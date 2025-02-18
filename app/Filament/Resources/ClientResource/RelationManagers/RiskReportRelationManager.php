@@ -1,38 +1,23 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\ClientResource\RelationManagers;
 
-use App\Models\RiskReport;
-use Filament\Forms\Components\Select;
-use App\Filament\Resources\RiskReportResource\Pages;
-use App\Filament\Resources\RiskReportResource\RelationManagers;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class RiskReportResource extends Resource
+class RiskReportRelationManager extends RelationManager
 {
-    protected static ?string $model = RiskReport::class;
+    protected static string $relationship = 'RiskReport';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('risk_number')
-                 ->label('Risk Number')
-                 ->dehydrated(false)
-                 ->disabled(),
-                 Forms\Components\Select::make('client_id')
-                    ->relationship(name:'client', titleAttribute:'first_name')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
                 Forms\Components\Select::make('type')
                     ->required()
                     ->options([
@@ -85,50 +70,30 @@ class RiskReportResource extends Resource
                     ->required(),
                 Forms\Components\Textarea::make('remarks')
                     ->nullable(),
-                ]);
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('risk_number')
-                    ->searchable(), 
-                Tables\Columns\TextColumn::make('client.full_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('pn_number'),
-                Tables\Columns\TextColumn::make('branch.name'),
-                Tables\Columns\TextColumn::make('segment'),
-                Tables\Columns\TextColumn::make('frp_class'),
-                Tables\Columns\TextColumn::make('applied_loan'),
-            ])
-            ->filters([
-             //
-             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
-    public static function getRelations(): array
+    public function table(Table $table): Table
     {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListRiskReports::route('/'),
-            'create' => Pages\CreateRiskReport::route('/create'),
-            'edit' => Pages\EditRiskReport::route('/{record}/edit'),
-        ];
+        return $table
+            ->recordTitleAttribute('type')
+            ->columns([
+                Tables\Columns\TextColumn::make('type'),
+            ])
+            ->filters([
+                //
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 }
