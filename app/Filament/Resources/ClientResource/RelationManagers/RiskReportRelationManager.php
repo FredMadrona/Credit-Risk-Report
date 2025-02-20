@@ -12,12 +12,16 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RiskReportRelationManager extends RelationManager
 {
-    protected static string $relationship = 'RiskReport';
+    protected static string $relationship = 'riskReport';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('risk_number')
+                 ->label('Risk Number')
+                 ->dehydrated(false)
+                 ->disabled(),
                 Forms\Components\Select::make('type')
                     ->required()
                     ->options([
@@ -78,7 +82,14 @@ class RiskReportRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('type')
             ->columns([
+                Tables\Columns\TextColumn::make('risk_number'),
+                Tables\Columns\TextColumn::make('client.full_name'),
                 Tables\Columns\TextColumn::make('type'),
+                Tables\Columns\TextColumn::make('pn_number'),
+                Tables\Columns\TextColumn::make('branch.name'),
+                Tables\Columns\TextColumn::make('segment'),
+                Tables\Columns\TextColumn::make('frp_class'),
+                Tables\Columns\TextColumn::make('applied_loan'),
             ])
             ->filters([
                 //

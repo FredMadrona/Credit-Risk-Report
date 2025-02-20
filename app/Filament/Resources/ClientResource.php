@@ -27,8 +27,7 @@ class ClientResource extends Resource
                     ->label('First Name')
                     ->required(),
                 Forms\Components\TextInput::make('middle_name')
-                    ->label('Middle Name')
-                    ->required(),
+                    ->label('Middle Name'),
                 Forms\Components\TextInput::make('last_name')
                     ->label('Last Name')
                     ->required(),
@@ -72,7 +71,6 @@ class ClientResource extends Resource
     {
         return [
             RelationManagers\RiskReportRelationManager::class,
-
         ];
     }
 
