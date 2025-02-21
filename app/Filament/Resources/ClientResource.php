@@ -45,7 +45,12 @@ class ClientResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('full_name')
-                    ->searchable(),
+                ->label('Full Name')
+                ->formatStateUsing(fn ($record) => $record->first_name . ' ' . $record->last_name)
+                ->searchable(query: function ($query, $search) {
+                    $query->where('first_name', 'like', "%{$search}%")
+                          ->orWhere('last_name', 'like', "%{$search}%");
+                }),
                 Tables\Columns\TextColumn::make('birthday')
                     ->date(),
                 Tables\Columns\TextColumn::make('applied_date')
