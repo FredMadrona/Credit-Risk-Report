@@ -1,15 +1,17 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory; 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 class RiskReport extends Model
 {
+
+    use HasFactory; 
     protected $fillable = [
         'risk_number', 'client_id', 'type', 'pn_number', 'branch_id', // ✅ Changed from 'branch' to 'branch_id'
-        'segment', 'frp_class', 'applied_load', 'date_rated', 'score', 
+        'segment', 'frp_class', 'applied_loan', 'date_rated', 'score', 
         'risk', 'risk_desc', 'next_review_date', 'remarks'
     ];
 
