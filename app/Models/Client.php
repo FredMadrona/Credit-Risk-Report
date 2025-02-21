@@ -1,10 +1,14 @@
 <?php
 namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory; // Import HasFactory
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Client extends Model
 {
+    use HasFactory; // Add this line
+
     protected $primaryKey = 'id';
     protected $appends = ['full_name'];
 
