@@ -34,7 +34,7 @@ class RiskReportFactory extends Factory
             'segment' => $this->faker->randomElement(['Retail', 'Corporate']),
             'frp_class' => $this->faker->randomElement(['A', 'B', 'C']),
             'applied_loan' => $this->faker->randomFloat(2, 1000, 500000), // Loan amount
-            'date_rated' => $this->faker->date(),
+            'date_rated' => $this->faker->dateTimeBetween('2020-01-01', '2025-12-31')->format('Y-m-d'),
             'score' => $this->faker->numberBetween(300, 850),
             'risk' => $this->faker->randomElement(['Low', 'Medium', 'High']),
             'risk_desc' => $this->faker->sentence(),

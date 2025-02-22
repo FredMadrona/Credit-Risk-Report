@@ -8,6 +8,7 @@ use App\Filament\Resources\RiskReportResource\Pages;
 use App\Filament\Resources\RiskReportResource\RelationManagers;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Tables\Filters\Filter;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -97,15 +98,30 @@ class RiskReportResource extends Resource
                 Tables\Columns\TextColumn::make('client.full_name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type'),
+                Tables\Columns\TextColumn::make('date_rated'),
                 Tables\Columns\TextColumn::make('pn_number'),
                 Tables\Columns\TextColumn::make('branch.name'),
-                Tables\Columns\TextColumn::make('segment'),
-                Tables\Columns\TextColumn::make('frp_class'),
                 Tables\Columns\TextColumn::make('applied_loan'),
             ])
-            ->filters([
-             //
-             ])
+            ->filters([ 
+                
+                Filter::make('created_at')
+                            ->form([
+                                Forms\Components\DatePicker::make('rated_from'),
+                                Forms\Components\DatePicker::make('rated_until'),
+                            ])
+                            ->query(function (Builder $query, array $data): Builder {
+                                return $query
+                                    ->when(
+                                        $data['rated_from'],
+                                        fn (Builder $query, $date): Builder => $query->whereDate('date_rated', '>=', $date),
+                                    )
+                                    ->when(
+                                        $data['rated_until'],
+                                        fn (Builder $query, $date): Builder => $query->whereDate('date_rated', '<=', $date),
+                                    );
+                            }),
+        ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
