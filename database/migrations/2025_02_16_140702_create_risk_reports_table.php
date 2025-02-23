@@ -7,7 +7,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('risk_reports', function (Blueprint $table) {
-            $table->id(); // Primary Key
+            $table->id(); 
             $table->string('risk_number')->unique(); 
             $table->foreignId('client_id')->constrained('clients')->onDelete('cascade'); 
             $table->string('type');
@@ -21,6 +21,8 @@ return new class extends Migration {
             $table->string('risk');
             $table->text('risk_desc');
             $table->date('next_review_date')->nullable();
+            $table->foreignId('requested_by')->nullable()->constrained('employees')->onDelete('set null');
+            $table->foreignId('assessed_by')->nullable()->constrained('employees')->onDelete('set null');
             $table->text('remarks')->nullable();
             $table->timestamps();
         });

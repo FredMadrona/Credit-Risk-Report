@@ -43,4 +43,14 @@ class RiskReport extends Model
     {
         return $this->belongsTo(Branch::class, 'branch_id');
     }
+
+    public function requestedBy()
+    {
+        return $this->belongsTo(Employee::class, 'requested_by');
+    }
+
+    public function assessedBy()
+    {
+        return $this->belongsTo(Employee::class, 'assessed_by');
+    }
 }

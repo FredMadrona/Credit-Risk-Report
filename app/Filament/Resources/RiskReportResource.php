@@ -30,10 +30,16 @@ class RiskReportResource extends Resource
                  ->dehydrated(false)
                  ->disabled(),
                  Forms\Components\Select::make('client_id')
-                    ->relationship(name:'client', titleAttribute:'first_name')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
+                 ->relationship(
+                     name: 'client',
+                     modifyQueryUsing: fn ($query) => 
+                         $query->selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
+                               ->orderByRaw("CONCAT(first_name, ' ', last_name) ASC"),
+                     titleAttribute: 'full_name'
+                 )
+                 ->searchable()
+                 ->preload()
+                 ->required(),
                 Forms\Components\Select::make('type')
                     ->required()
                     ->options([
@@ -84,6 +90,19 @@ class RiskReportResource extends Resource
                 Forms\Components\DatePicker::make('next_review_date')
                     ->label('Next Review Date')
                     ->required(),
+                    Forms\Components\Select::make('requested_by')
+                    ->label('Requested By')
+                    ->relationship('requestedBy', 'name') 
+                    ->searchable()
+                    ->preload()
+                    ->nullable(),
+                
+                Forms\Components\Select::make('assessed_by')
+                    ->label('Assessed By')
+                    ->relationship('assessedBy', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->nullable(),                
                 Forms\Components\Textarea::make('remarks')
                     ->nullable(),
                 ]);
@@ -93,9 +112,8 @@ class RiskReportResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('risk_number')
-                    ->searchable(), 
-                Tables\Columns\TextColumn::make('client.full_name')
+                Tables\Columns\TextColumn::make('risk_number'),
+                Tables\Columns\TextColumn::make('client.first_name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('date_rated'),
@@ -106,21 +124,21 @@ class RiskReportResource extends Resource
             ->filters([ 
                 
                 Filter::make('created_at')
-                            ->form([
-                                Forms\Components\DatePicker::make('rated_from'),
-                                Forms\Components\DatePicker::make('rated_until'),
-                            ])
-                            ->query(function (Builder $query, array $data): Builder {
-                                return $query
-                                    ->when(
-                                        $data['rated_from'],
-                                        fn (Builder $query, $date): Builder => $query->whereDate('date_rated', '>=', $date),
-                                    )
-                                    ->when(
-                                        $data['rated_until'],
-                                        fn (Builder $query, $date): Builder => $query->whereDate('date_rated', '<=', $date),
-                                    );
-                            }),
+                                ->form([
+                                    Forms\Components\DatePicker::make('rated_from'),
+                                    Forms\Components\DatePicker::make('rated_until'),
+                                ])
+                                ->query(function (Builder $query, array $data): Builder {
+                                    return $query
+                                        ->when(
+                                            $data['rated_from'],
+                                            fn (Builder $query, $date): Builder => $query->whereDate('date_rated', '>=', $date),
+                                        )
+                                        ->when(
+                                            $data['rated_until'],
+                                            fn (Builder $query, $date): Builder => $query->whereDate('date_rated', '<=', $date),
+                                        );
+                                }),
         ])
             ->actions([
                 Tables\Actions\EditAction::make(),

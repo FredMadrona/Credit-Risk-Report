@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\RiskReport;
 use App\Models\Client;
 use App\Models\Branch;
-
+use App\Models\Employee;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\RiskReport>
  */
@@ -29,7 +29,7 @@ class RiskReportFactory extends Factory
         return [
             'client_id' => Client::factory(), // Generates a new client or use existing
             'branch_id' => Branch::inRandomOrder()->first()->id ?? Branch::factory(),
-            'type' => $this->faker->randomElement(['Personal Loan', 'Business Loan']),
+            'type' => $this->faker->randomElement(['ICRR', 'BRR']),
             'pn_number' => strtoupper($this->faker->bothify('PN-###-####')),
             'segment' => $this->faker->randomElement(['Retail', 'Corporate']),
             'frp_class' => $this->faker->randomElement(['A', 'B', 'C']),
@@ -39,6 +39,8 @@ class RiskReportFactory extends Factory
             'risk' => $this->faker->randomElement(['Low', 'Medium', 'High']),
             'risk_desc' => $this->faker->sentence(),
             'next_review_date' => $this->faker->date(),
+            'requested_by' => Employee::inRandomOrder()->first()->id ?? Employee::factory(),
+            'assessed_by' => Employee::inRandomOrder()->first()->id ?? Employee::factory(),
             'remarks' => $this->faker->optional()->sentence(),
             'created_at' => now(),
             'updated_at' => now(),
