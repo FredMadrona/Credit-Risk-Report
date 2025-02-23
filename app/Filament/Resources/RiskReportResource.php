@@ -113,7 +113,9 @@ class RiskReportResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('risk_number'),
-                Tables\Columns\TextColumn::make('client.first_name')
+                Tables\Columns\TextColumn::make('client.full_name')
+                    ->label('Client Name')
+                    ->formatStateUsing(fn ($record) => $record->client->first_name . ' ' . $record->client->last_name)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('date_rated'),
