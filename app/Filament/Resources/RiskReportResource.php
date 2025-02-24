@@ -112,11 +112,16 @@ class RiskReportResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('risk_number'),
+                Tables\Columns\TextColumn::make('risk_number')
+                ->searchable(),
                 Tables\Columns\TextColumn::make('client.full_name')
-                    ->label('Client Name')
-                    ->formatStateUsing(fn ($record) => $record->client->first_name . ' ' . $record->client->last_name)
-                    ->searchable(),
+                ->label('Client Name')
+                ->formatStateUsing(fn ($record) => $record->client->first_name . ' ' . $record->client->last_name)
+                ->searchable(query: function ($query, $search) {
+                    $query->whereHas('client', function ($clientQuery) use ($search) {
+                        $clientQuery->whereRaw("LOWER(CONCAT(first_name, ' ', last_name)) LIKE ?", ['%' . strtolower($search) . '%']);
+                    });
+                }),
                 Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('date_rated'),
                 Tables\Columns\TextColumn::make('pn_number'),
@@ -143,7 +148,10 @@ class RiskReportResource extends Resource
                                 }),
         ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -164,6 +172,7 @@ class RiskReportResource extends Resource
         return [
             'index' => Pages\ListRiskReports::route('/'),
             'create' => Pages\CreateRiskReport::route('/create'),
+            'view' => Pages\ViewRiskReport::route('/{record}'),
             'edit' => Pages\EditRiskReport::route('/{record}/edit'),
         ];
     }
