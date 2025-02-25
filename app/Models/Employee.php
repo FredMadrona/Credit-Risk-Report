@@ -13,6 +13,7 @@ class Employee extends Model
         'name',
         'birth_date',
         'hire_date',
+        'date_regularized',
     ];
 
     public function branch() : BelongsTo

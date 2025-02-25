@@ -52,6 +52,7 @@ class EmployeeResource extends Resource
                     ->required()
                     ->options([
                     'Regular' => 'Regular',
+                    'Contractual' => 'Contractual',
                     'Probationary' => 'Probationary',   
                 ]),
                 Forms\Components\Select::make('job_position')
@@ -68,7 +69,7 @@ class EmployeeResource extends Resource
                 'Vice President' => 'Vice President',
 
             ]),
-            Forms\Components\DatePicker::make('birthday')->required(),
+            Forms\Components\DatePicker::make('birth_date')->required(),
             Forms\Components\DatePicker::make('hire_date')->required(),
         ]);    }
 
@@ -78,10 +79,10 @@ class EmployeeResource extends Resource
         ->columns([
             Tables\Columns\TextColumn::make('name')
             ->searchable(),
+            Tables\Columns\TextColumn::make('employee_type'),
             Tables\Columns\TextColumn::make('branch.name'),
             Tables\Columns\TextColumn::make('department.name'),
             Tables\Columns\TextColumn::make('job_position')->searchable(),
-            Tables\Columns\TextColumn::make('department.name'),
         ])
             ->filters([
                //
