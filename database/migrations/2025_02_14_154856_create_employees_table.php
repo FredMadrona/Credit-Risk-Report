@@ -13,8 +13,9 @@ return new class extends Migration {
             $table->foreignId('department_id')->constrained('departments')->cascadeOnDelete();
             $table->string('employee_type');
             $table->string('job_position');
-            $table->date('birthday');
+            $table->date('birth_date');
             $table->date('hire_date');
+            $table->date('date_regularized');
             $table->timestamps();
         });
     }
