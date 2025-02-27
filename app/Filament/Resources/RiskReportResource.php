@@ -112,8 +112,6 @@ class RiskReportResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('risk_number')
-                ->searchable(),
                 Tables\Columns\TextColumn::make('client.full_name')
                 ->label('Client Name')
                 ->formatStateUsing(fn ($record) => $record->client->first_name . ' ' . $record->client->last_name)
@@ -122,10 +120,12 @@ class RiskReportResource extends Resource
                         $clientQuery->whereRaw("LOWER(CONCAT(first_name, ' ', last_name)) LIKE ?", ['%' . strtolower($search) . '%']);
                     });
                 }),
-                Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('date_rated'),
-                Tables\Columns\TextColumn::make('pn_number'),
                 Tables\Columns\TextColumn::make('branch.name'),
+                Tables\Columns\TextColumn::make('segment'),
+                Tables\Columns\TextColumn::make('date_rated'),
+                Tables\Columns\TextColumn::make('score'),
+                Tables\Columns\TextColumn::make('risk'),
+                Tables\Columns\TextColumn::make('risk_desc'),
                 Tables\Columns\TextColumn::make('applied_loan'),
             ])
             ->filters([ 

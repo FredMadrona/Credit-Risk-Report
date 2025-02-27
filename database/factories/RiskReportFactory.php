@@ -36,8 +36,8 @@ class RiskReportFactory extends Factory
             'applied_loan' => $this->faker->randomFloat(2, 1000, 500000), // Loan amount
             'date_rated' => $this->faker->dateTimeBetween('2020-01-01', '2025-12-31')->format('Y-m-d'),
             'score' => $this->faker->numberBetween(300, 850),
-            'risk' => $this->faker->randomElement(['Low', 'Medium', 'High']),
-            'risk_desc' => $this->faker->sentence(),
+            'risk' => $this->faker->randomElement(['ICRR/BRR3', 'ICRR/BRR4', 'ICRR/BRR5']),
+            'risk_desc' => $this->faker->randomElement(['LOW RISK', 'MODERATE RISK', 'HIGH RISK']),
             'next_review_date' => $this->faker->date(),
             'requested_by' => Employee::inRandomOrder()->first()->id ?? Employee::factory(),
             'assessed_by' => Employee::inRandomOrder()->first()->id ?? Employee::factory(),
