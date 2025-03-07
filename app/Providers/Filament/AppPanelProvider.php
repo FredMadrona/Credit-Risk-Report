@@ -25,6 +25,10 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->id('app')
             ->path('app')
+            ->login()
+            ->registration()
+            ->passwordReset()
+            ->emailVerification()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -35,8 +39,7 @@ class AppPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\\Filament\\App\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+          
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -51,9 +54,6 @@ class AppPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])
-            ->plugins([
-                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
             ]);
     }
 }
