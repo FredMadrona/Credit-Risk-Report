@@ -1,26 +1,29 @@
 <?php
-
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class AdminSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        User::updateOrCreate(
-            ['email' => 'admin@example.com'],
+        // Ensure the "Admin" role exists
+        $role = Role::firstOrCreate(['name' => 'Admin']);
+
+        // Create an Admin user
+        $user = User::firstOrCreate(
+            ['email' => 'admin@example.com'], // Change to your desired email
             [
                 'name' => 'Admin User',
-                'password' => Hash::make('adminpassword'), 
-                'is_admin' => true, 
+                'password' => bcrypt('password123'), // Change password if needed
             ]
-        );           
+        );
+
+        // Assign the Admin role to the user
+        $user->assignRole($role);
+
+        echo "Admin user seeded successfully! ✅\n";
     }
 }
