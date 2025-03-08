@@ -14,9 +14,18 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Spatie\Permission\Traits\HasRoles;
 
 class RiskReportResource extends Resource
 {
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->hasRole(['Admin','Credit Risk']);
+    }
+
+    
+
     protected static ?string $model = RiskReport::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';

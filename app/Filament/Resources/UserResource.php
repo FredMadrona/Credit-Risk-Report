@@ -17,9 +17,14 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Spatie\Permission\Models\Role;
 use Filament\Forms\Components\Section;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Traits\HasRoles;
 
 class UserResource extends Resource
 {
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->hasRole('Admin');
+    }
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -43,7 +48,7 @@ class UserResource extends Resource
                         ->label('Password')
                         ->password()
                         ->revealable()
-                        ->dehydrateStateUsing(fn ($state) => !empty($state) ? Hash::make($state) : null)
+                        ->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : auth()->user()->password) // ✅ Keeps old password if empty
                         ->nullable()
                         ->same('password_confirmation'),
 
