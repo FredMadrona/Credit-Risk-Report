@@ -18,7 +18,10 @@ use Spatie\Permission\Traits\HasRoles;
 
 class RiskReportResource extends Resource
 {
-
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Credit Risk';
+    }
     public static function canViewAny(): bool
     {
         return auth()->user()->hasRole(['Admin','Credit Risk']);
