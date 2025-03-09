@@ -66,7 +66,7 @@ class RiskReportResource extends Resource
                     ->label('PN Number')
                     ->required(),
                 Forms\Components\Select::make('branch_id')
-                    ->relationship(name:'branch', titleAttribute:'name')
+                    ->relationship(name:'branch', titleAttribute:'branch_name')
                     ->searchable()
                     ->preload(),
                 Forms\Components\TextInput::make('segment')
