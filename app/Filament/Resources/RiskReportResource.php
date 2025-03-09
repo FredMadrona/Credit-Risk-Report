@@ -142,7 +142,9 @@ class RiskReportResource extends Resource
                 Tables\Columns\TextColumn::make('score'),
                 Tables\Columns\TextColumn::make('risk'),
                 Tables\Columns\TextColumn::make('risk_desc'),
-                Tables\Columns\TextColumn::make('applied_loan'),
+                Tables\Columns\TextColumn::make('applied_loan')
+                ->formatStateUsing(fn ($state) => number_format($state, 2)),
+            
             ])
             ->filters([ 
                 
