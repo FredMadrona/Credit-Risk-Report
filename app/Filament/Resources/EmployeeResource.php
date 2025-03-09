@@ -34,7 +34,7 @@ class EmployeeResource extends Resource
                 ->required()
                 ->maxLength(255),
             Forms\Components\Select::make('branch_id')
-                    ->relationship('branch', 'name')
+                    ->relationship('branch', 'branch_name')
                     ->searchable()
                     ->preload()
                     ->createOptionForm([
@@ -86,7 +86,7 @@ class EmployeeResource extends Resource
             Tables\Columns\TextColumn::make('name')
             ->searchable(),
             Tables\Columns\TextColumn::make('employee_type'),
-            Tables\Columns\TextColumn::make('branch.name'),
+            Tables\Columns\TextColumn::make('branch.branch_name'),
             Tables\Columns\TextColumn::make('department.name'),
             Tables\Columns\TextColumn::make('job_position')->searchable(),
         ])

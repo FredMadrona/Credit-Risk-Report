@@ -9,7 +9,12 @@ return new class extends Migration {
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('branch_name');
+            $table->string('branch_code')->unique();
+            $table->string('branch_address')->nullable();
+            $table->string('branch_phone')->nullable();
+            $table->string('branch_email')->nullable();
+            $table->string('branch_manager')->nullable();
             $table->timestamps();
         });
     }
