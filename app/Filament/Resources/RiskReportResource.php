@@ -15,6 +15,10 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Spatie\Permission\Traits\HasRoles;
+use Filament\Actions\ExportAction;
+use App\Filament\Exports\RiskReportExporter;
+use Filament\Tables\Actions\ExportBulkAction;
+
 
 class RiskReportResource extends Resource
 {
@@ -165,10 +169,14 @@ class RiskReportResource extends Resource
                 Tables\Actions\DeleteAction::make(),
 
             ])
+            ->headerActions([
+                Tables\Actions\ExportAction::make()->exporter(RiskReportExporter::class),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),
                 ]),
+                ExportBulkAction::make()->exporter(RiskReportExporter::class),
             ]);
     }
 

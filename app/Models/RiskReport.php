@@ -10,7 +10,7 @@ class RiskReport extends Model
 
     use HasFactory; 
     protected $fillable = [
-        'risk_number', 'client_id', 'type', 'pn_number', 'branch_id', // ✅ Changed from 'branch' to 'branch_id'
+        'risk_number', 'client_id', 'type', 'pn_number', 'branch_id',
         'segment', 'frp_class', 'applied_loan', 'date_rated', 'score', 
         'risk', 'risk_desc', 'next_review_date', 'remarks'
     ];
