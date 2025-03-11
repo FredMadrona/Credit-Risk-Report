@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->string('name');
             $table->foreignId('branch_id')->constrained('branches')->cascadeOnDelete(); 
             $table->foreignId('department_id')->constrained('departments')->cascadeOnDelete();
-            $table->string('employee_type');
+            $table->string('employee_status');
             $table->string('job_position');
             $table->date('birth_date');
             $table->date('hire_date');

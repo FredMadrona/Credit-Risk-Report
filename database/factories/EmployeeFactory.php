@@ -29,7 +29,7 @@ class EmployeeFactory extends Factory
             'name' => $this->faker->name(),
             'branch_id' => Branch::inRandomOrder()->first()->id ?? Branch::factory(),
             'department_id' => Department::inRandomOrder()->first()->id ?? Department::factory(),
-            'employee_type' => $this->faker->randomElement(['Regular', 'Probationary', 'Contractual']),
+            'employee_status' => $this->faker->randomElement(['Active', 'Resigned', 'Retired']),
             'job_position' => $this->faker->randomElement(['Associate',
             'Department Head',
             'CEO',
