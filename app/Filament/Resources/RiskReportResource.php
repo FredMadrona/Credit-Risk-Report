@@ -18,7 +18,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Filament\Actions\ExportAction;
 use App\Filament\Exports\RiskReportExporter;
 use Filament\Tables\Actions\ExportBulkAction;
-
+use App\Models\Client;
 
 class RiskReportResource extends Resource
 {
@@ -45,17 +45,8 @@ class RiskReportResource extends Resource
                  ->label('Risk Number')
                  ->dehydrated(false)
                  ->disabled(),
-                 Forms\Components\Select::make('client_id')
-                 ->relationship(
-                     name: 'client',
-                     modifyQueryUsing: fn ($query) => 
-                         $query->selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
-                               ->orderByRaw("CONCAT(first_name, ' ', last_name) ASC"),
-                     titleAttribute: 'full_name'
-                 )
-                 ->searchable()
-                 ->preload()
-                 ->required(),
+                Forms\Components\Select::make('clients')
+                    ->options(client::query()->get()->pluck('full_name', 'id')),
                 Forms\Components\Select::make('type')
                     ->required()
                     ->options([
@@ -128,15 +119,8 @@ class RiskReportResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('client.full_name')
-                ->label('Client Name')
-                ->formatStateUsing(fn ($record) => $record->client->first_name . ' ' . $record->client->last_name)
-                ->searchable(query: function ($query, $search) {
-                    $query->whereHas('client', function ($clientQuery) use ($search) {
-                        $clientQuery->whereRaw("LOWER(CONCAT(first_name, ' ', last_name)) LIKE ?", ['%' . strtolower($search) . '%']);
-                    });
-                }),
-                Tables\Columns\TextColumn::make('branch.name'),
+                Tables\Columns\TextColumn::make('client.full_name'),
+                Tables\Columns\TextColumn::make('branch.branch_name'),
                 Tables\Columns\TextColumn::make('segment'),
                 Tables\Columns\TextColumn::make('date_rated'),
                 Tables\Columns\TextColumn::make('score'),
