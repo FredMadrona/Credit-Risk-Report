@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\SelectFilter;
 
 class EmployeeResource extends Resource
 {
@@ -54,12 +55,12 @@ class EmployeeResource extends Resource
                             ->maxlength(255) 
                     ]),
 
-                    Forms\Components\Select::make('employee_type')
-                    ->required()
-                    ->options([
-                    'Regular' => 'Regular',
-                    'Contractual' => 'Contractual',
-                    'Probationary' => 'Probationary',   
+                    Forms\Components\Select::make('employee_status')
+                    ->required() 
+                    ->options([ 
+                    'Active' => 'Active',
+                    'Resigned' => 'Resigned',
+                    'Retired' => 'Retired',   
                 ]),
                 Forms\Components\Select::make('job_position')
                 ->required()
@@ -85,13 +86,26 @@ class EmployeeResource extends Resource
         ->columns([
             Tables\Columns\TextColumn::make('name')
             ->searchable(),
-            Tables\Columns\TextColumn::make('employee_type'),
+            Tables\Columns\TextColumn::make('employee_status')
+            ->badge()
+            ->searchable()
+            ->color(fn (string $state): string => match ($state) {
+                'Active' => 'success',
+                'Resigned' => 'danger',
+                'Retired' => 'warning',
+                default => 'primary',
+            }),
             Tables\Columns\TextColumn::make('branch.branch_name'),
             Tables\Columns\TextColumn::make('department.name'),
             Tables\Columns\TextColumn::make('job_position')->searchable(),
         ])
             ->filters([
-               //
+               SelectFilter::make('employee_status')
+                    ->options([
+                        'Active' => 'Active',
+                        'Resigned' => 'Resigned',
+                        'Retired' => 'Retired',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

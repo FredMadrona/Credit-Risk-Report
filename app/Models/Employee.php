@@ -11,9 +11,19 @@ class Employee extends Model
 
     protected $fillable = [
         'name',
+        'branch_id',
+        'department_id',
+        'employee_status',
+        'job_position',
         'birth_date',
         'hire_date',
         'date_regularized',
+    ];
+
+    protected $casts = [
+        'birth_date' => 'date',
+        'hire_date' => 'date',
+        'date_regularized' => 'date',
     ];
 
     public function branch() : BelongsTo
