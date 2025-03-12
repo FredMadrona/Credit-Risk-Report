@@ -12,7 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use App\Models\Employee;
 class BranchResource extends Resource
 {
     protected static ?string $model = Branch::class;
@@ -52,12 +52,11 @@ public static function form(Form $form): Form
                 ->email()
                 ->maxLength(255),
 
-                Forms\Components\Select::make('branch_manager_id')
+                Forms\Components\Select::make('branch_manager')
                 ->label('Branch Manager')
-                ->relationship('manager', 'name') 
+                ->options(Employee::all()->pluck('name', 'id'))
                 ->searchable()
-                ->preload()
-                ->nullable(),
+                ->required(),                
         ]);
 }
 
