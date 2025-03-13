@@ -52,7 +52,7 @@ public static function form(Form $form): Form
                 ->email()
                 ->maxLength(255),
 
-                Forms\Components\Select::make('branch_manager')
+                Forms\Components\Select::make('branch_manager_id')
                 ->label('Branch Manager')
                 ->options(Employee::all()->pluck('name', 'id'))
                 ->searchable()
@@ -87,15 +87,11 @@ public static function table(Table $table): Table
             Tables\Columns\TextColumn::make('branch_email')
                 ->label('Email Address')
                 ->sortable(),
-            Tables\Columns\TextColumn::make('branch_manager')
+            Tables\Columns\TextColumn::make('manager.name') 
                 ->label('Branch Manager')
                 ->sortable()
-                ->searchable(),            
-
-            Tables\Columns\TextColumn::make('created_at')
-                ->label('Created At')
-                ->dateTime('M d, Y H:i')
-                ->sortable(),
+                ->searchable(),
+                      
         ])
             ->filters([
                         //

@@ -10,15 +10,6 @@ class DepartmentSeeder extends Seeder
 {
     public function run()
     {
-        $departments = [
-            ['name' => 'Compliance Department'],
-            ['name' => 'Internal Audit Department'],
-            ['name' => 'Finance Department'],
-            ['name' => 'General Services Department'],
-            ['name' => 'Information Technology Department'],
-
-        ];
-
-        Department::insert($departments);
+        Department::factory()->count(10)->create();
     }
 }
