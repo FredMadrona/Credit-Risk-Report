@@ -36,10 +36,11 @@ class Employee extends Model
         return $this->belongsTo(Department::class);
     }
     
-    public function managedBranch()
-    {
-        return $this->hasOne(Branch::class, 'branch_manager_id');
-    }
+    public function manager()
+{
+    return $this->belongsTo(Employee::class, 'branch_manager_id');
+}
+
     
 
 }

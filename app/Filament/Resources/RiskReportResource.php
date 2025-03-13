@@ -19,6 +19,7 @@ use Filament\Actions\ExportAction;
 use App\Filament\Exports\RiskReportExporter;
 use Filament\Tables\Actions\ExportBulkAction;
 use App\Models\Client;
+use App\Models\Employee;
 
 class RiskReportResource extends Resource
 {
@@ -45,8 +46,10 @@ class RiskReportResource extends Resource
                  ->label('Risk Number')
                  ->dehydrated(false)
                  ->disabled(),
-                Forms\Components\Select::make('clients')
-                    ->options(client::query()->get()->pluck('full_name', 'id')),
+                Forms\Components\Select::make('client_id')
+                    ->label('Client Name')
+                    ->required()
+                    ->options(Client::query()->get()->pluck('full_name', 'id')),
                 Forms\Components\Select::make('type')
                     ->required()
                     ->options([
@@ -99,14 +102,14 @@ class RiskReportResource extends Resource
                     ->required(),
                     Forms\Components\Select::make('requested_by')
                     ->label('Requested By')
-                    ->relationship('requestedBy', 'name') 
+                    ->options(Employee::all()->pluck('name', 'id'))
                     ->searchable()
                     ->preload()
                     ->nullable(),
                 
                 Forms\Components\Select::make('assessed_by')
                     ->label('Assessed By')
-                    ->relationship('assessedBy', 'name')
+                    ->options(Employee::all()->pluck('name', 'id'))
                     ->searchable()
                     ->preload()
                     ->nullable(),                
@@ -121,11 +124,10 @@ class RiskReportResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('client.full_name'),
                 Tables\Columns\TextColumn::make('branch.branch_name'),
-                Tables\Columns\TextColumn::make('segment'),
                 Tables\Columns\TextColumn::make('date_rated'),
-                Tables\Columns\TextColumn::make('score'),
-                Tables\Columns\TextColumn::make('risk'),
-                Tables\Columns\TextColumn::make('risk_desc'),
+                Tables\Columns\TextColumn::make('next_review_date'),
+                Tables\Columns\TextColumn::make('employee.employee_name'),
+                Tables\Columns\TextColumn::make('assessed_by'),
                 Tables\Columns\TextColumn::make('applied_loan')
                 ->formatStateUsing(fn ($state) => number_format($state, 2)),
             

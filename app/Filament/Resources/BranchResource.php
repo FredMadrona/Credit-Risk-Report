@@ -12,7 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use App\Models\Employee;
 class BranchResource extends Resource
 {
     protected static ?string $model = Branch::class;
@@ -54,10 +54,9 @@ public static function form(Form $form): Form
 
                 Forms\Components\Select::make('branch_manager_id')
                 ->label('Branch Manager')
-                ->relationship('manager', 'name') 
+                ->options(Employee::all()->pluck('name', 'id'))
                 ->searchable()
-                ->preload()
-                ->nullable(),
+                ->required(),                
         ]);
 }
 
@@ -88,15 +87,11 @@ public static function table(Table $table): Table
             Tables\Columns\TextColumn::make('branch_email')
                 ->label('Email Address')
                 ->sortable(),
-            Tables\Columns\TextColumn::make('branch_manager')
+            Tables\Columns\TextColumn::make('manager.name') 
                 ->label('Branch Manager')
                 ->sortable()
-                ->searchable(),            
-
-            Tables\Columns\TextColumn::make('created_at')
-                ->label('Created At')
-                ->dateTime('M d, Y H:i')
-                ->sortable(),
+                ->searchable(),
+                      
         ])
             ->filters([
                         //
