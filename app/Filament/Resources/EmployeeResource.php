@@ -96,12 +96,12 @@ class EmployeeResource extends Resource
                 default => 'primary',
             }),
             Tables\Columns\TextColumn::make('branch.branch_name')
-                ->toggleable(),
+                ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('department.name')
-                ->toggleable(),
+                ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('job_position')
                 ->searchable()
-                ->toggleable(),
+                ->toggleable(isToggledHiddenByDefault: true),
         ])
             ->filters([
                SelectFilter::make('employee_status')

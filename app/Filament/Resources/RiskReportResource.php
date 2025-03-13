@@ -125,18 +125,18 @@ class RiskReportResource extends Resource
                 Tables\Columns\TextColumn::make('risk_number'),
                 Tables\Columns\TextColumn::make('client.full_name'),
                 Tables\Columns\TextColumn::make('branch.branch_name')
-                ->toggleable(),
+                ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('date_rated')
-                ->toggleable(),
+                ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('next_review_date')
-                ->toggleable(),
+                ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('employee.employee_name')
-                ->toggleable(),
+                ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('assessed_by')
-                ->toggleable(),
+                ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('applied_loan')
                 ->formatStateUsing(fn ($state) => number_format($state, 2))
-                ->toggleable(),
+                ->toggleable(isToggledHiddenByDefault: true),
             
             ])
             ->filters([ 
