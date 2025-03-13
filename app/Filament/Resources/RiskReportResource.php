@@ -122,14 +122,21 @@ class RiskReportResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('risk_number'),
                 Tables\Columns\TextColumn::make('client.full_name'),
-                Tables\Columns\TextColumn::make('branch.branch_name'),
-                Tables\Columns\TextColumn::make('date_rated'),
-                Tables\Columns\TextColumn::make('next_review_date'),
-                Tables\Columns\TextColumn::make('employee.employee_name'),
-                Tables\Columns\TextColumn::make('assessed_by'),
+                Tables\Columns\TextColumn::make('branch.branch_name')
+                ->toggleable(),
+                Tables\Columns\TextColumn::make('date_rated')
+                ->toggleable(),
+                Tables\Columns\TextColumn::make('next_review_date')
+                ->toggleable(),
+                Tables\Columns\TextColumn::make('employee.employee_name')
+                ->toggleable(),
+                Tables\Columns\TextColumn::make('assessed_by')
+                ->toggleable(),
                 Tables\Columns\TextColumn::make('applied_loan')
-                ->formatStateUsing(fn ($state) => number_format($state, 2)),
+                ->formatStateUsing(fn ($state) => number_format($state, 2))
+                ->toggleable(),
             
             ])
             ->filters([ 
