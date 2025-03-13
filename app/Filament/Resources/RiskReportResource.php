@@ -107,7 +107,7 @@ class RiskReportResource extends Resource
                     ->preload()
                     ->nullable(),
                 
-                Forms\Components\Select::make('assessed_by')
+                Forms\Components\Select::make('assessed_by.name')
                     ->label('Assessed By')
                     ->options(Employee::all()->pluck('name', 'id'))
                     ->searchable()
@@ -121,7 +121,7 @@ class RiskReportResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
+              ->columns([
                 Tables\Columns\TextColumn::make('risk_number'),
                 Tables\Columns\TextColumn::make('client.full_name'),
                 Tables\Columns\TextColumn::make('branch.branch_name')
