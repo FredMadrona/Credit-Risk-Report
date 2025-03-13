@@ -95,9 +95,13 @@ class EmployeeResource extends Resource
                 'Retired' => 'warning',
                 default => 'primary',
             }),
-            Tables\Columns\TextColumn::make('branch.branch_name'),
-            Tables\Columns\TextColumn::make('department.name'),
-            Tables\Columns\TextColumn::make('job_position')->searchable(),
+            Tables\Columns\TextColumn::make('branch.branch_name')
+                ->toggleable(),
+            Tables\Columns\TextColumn::make('department.name')
+                ->toggleable(),
+            Tables\Columns\TextColumn::make('job_position')
+                ->searchable()
+                ->toggleable(),
         ])
             ->filters([
                SelectFilter::make('employee_status')
