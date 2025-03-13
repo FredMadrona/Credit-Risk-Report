@@ -73,23 +73,27 @@ public static function table(Table $table): Table
             Tables\Columns\TextColumn::make('branch_code')
                 ->label('Branch Code')
                 ->sortable()
+                ->toggleable()
                 ->searchable(),
 
             Tables\Columns\TextColumn::make('branch_address')
                 ->label('Address')
                 ->sortable()
+                ->toggleable()
                 ->searchable(),
 
             Tables\Columns\TextColumn::make('branch_phone')
                 ->label('Phone Number')
-                ->sortable(),
-
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('branch_email')
                 ->label('Email Address')
-                ->sortable(),
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('manager.name') 
                 ->label('Branch Manager')
                 ->sortable()
+                ->toggleable()
                 ->searchable(),
                       
         ])

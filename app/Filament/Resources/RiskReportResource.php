@@ -121,14 +121,22 @@ class RiskReportResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('client.full_name')
-                ->searchable(),
-                Tables\Columns\TextColumn::make('date_rated'),
-                Tables\Columns\TextColumn::make('next_review_date'),
-                Tables\Columns\TextColumn::make('assessedBy.name'),
+              ->columns([
+                Tables\Columns\TextColumn::make('risk_number'),
+                Tables\Columns\TextColumn::make('client.full_name'),
+                Tables\Columns\TextColumn::make('branch.branch_name')
+                ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('date_rated')
+                ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('next_review_date')
+                ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('employee.employee_name')
+                ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('assessed_by')
+                ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('applied_loan')
-                ->formatStateUsing(fn ($state) => number_format($state, 2)),
+                ->formatStateUsing(fn ($state) => number_format($state, 2))
+                ->toggleable(isToggledHiddenByDefault: true),
             
             ])
             ->filters([ 

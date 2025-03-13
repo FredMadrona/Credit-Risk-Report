@@ -57,9 +57,11 @@ class ClientResource extends Resource
                           ->orWhere('last_name', 'like', "%{$search}%");
                 }),
                 Tables\Columns\TextColumn::make('birthday')
-                    ->date(),
+                    ->date()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('applied_date')
-                    ->date(),
+                    ->date()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

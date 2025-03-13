@@ -83,8 +83,10 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('roles')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Role')
                     ->formatStateUsing(fn ($record) => $record->roles->pluck('name')->join(', '))
                     ->badge(), 
