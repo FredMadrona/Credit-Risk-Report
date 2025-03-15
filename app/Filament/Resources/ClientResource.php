@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class ClientResource extends Resource
 {
@@ -24,7 +25,30 @@ class ClientResource extends Resource
     return 'Organization Management';
 }
 
-    public static function form(Form $form): Form
+public static function canViewAny(): bool
+        {
+            return self::userHasAccess();
+        }
+
+        public static function canAccess(): bool
+        {
+            return self::userHasAccess();
+        }
+
+        private static function userHasAccess(): bool
+        {
+            $allowedRoles = ['Admin','Credit Risk', 'IT Risk', 'Ops Risk'];
+            return Auth::user()?->roles()->whereIn('name', $allowedRoles)->exists() ?? false;
+        }
+
+        public static function canEdit($record): bool
+        {
+            return Auth::user()?->roles()->whereIn('name', ['Admin', 'Credit Risk'])->exists() ?? false;
+        }
+
+
+
+public static function form(Form $form): Form
     {
         return $form
             ->schema([

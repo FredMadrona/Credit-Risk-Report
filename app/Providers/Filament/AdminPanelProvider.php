@@ -29,7 +29,6 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->registration()
             ->passwordReset()
             ->emailVerification()
             ->profile(EditProfile::class)
@@ -58,11 +57,20 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->plugins([
-                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
-            ])
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    public function canAccessPanel(): bool
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return false; // Deny access if the user is not logged in
+        }
+
+        // Allow access only for specific roles
+        return in_array($user->roles, ['Admin', 'Credit Risk', 'IT Risk', 'Ops Risk']);
     }
 }

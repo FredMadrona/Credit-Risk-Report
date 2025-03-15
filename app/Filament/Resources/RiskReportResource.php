@@ -14,12 +14,12 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Spatie\Permission\Traits\HasRoles;
 use Filament\Actions\ExportAction;
 use App\Filament\Exports\RiskReportExporter;
 use Filament\Tables\Actions\ExportBulkAction;
 use App\Models\Client;
 use App\Models\Employee;
+use Illuminate\Support\Facades\Auth;
 
 class RiskReportResource extends Resource
 {
@@ -28,11 +28,25 @@ class RiskReportResource extends Resource
         return 'Credit Risk';
     }
     public static function canViewAny(): bool
-    {
-        return auth()->user()->hasRole(['Admin','Credit Risk']);
-    }
+        {
+            return self::userHasAccess();
+        }
 
-    
+        public static function canAccess(): bool
+        {
+            return self::userHasAccess();
+        }
+
+        private static function userHasAccess(): bool
+        {
+            $allowedRoles = ['Admin','Credit Risk', 'IT Risk', 'Ops Risk'];
+            return Auth::user()?->roles()->whereIn('name', $allowedRoles)->exists() ?? false;
+        }
+
+        public static function canEdit($record): bool
+        {
+            return Auth::user()?->roles()->whereIn('name', ['Admin', 'Credit Risk'])->exists() ?? false;
+        }
 
     protected static ?string $model = RiskReport::class;
 
@@ -122,7 +136,8 @@ class RiskReportResource extends Resource
     {
         return $table
               ->columns([
-                Tables\Columns\TextColumn::make('risk_number'),
+                Tables\Columns\TextColumn::make('risk_number')
+                ->searchable(),
                 Tables\Columns\TextColumn::make('client.full_name'),
                 Tables\Columns\TextColumn::make('branch.branch_name')
                 ->toggleable(isToggledHiddenByDefault: true),
