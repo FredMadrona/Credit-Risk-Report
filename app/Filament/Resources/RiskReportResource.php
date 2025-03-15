@@ -121,7 +121,7 @@ class RiskReportResource extends Resource
                     ->preload()
                     ->nullable(),
                 
-                Forms\Components\Select::make('assessed_by.name')
+                Forms\Components\Select::make('assessed_by')
                     ->label('Assessed By')
                     ->options(Employee::all()->pluck('name', 'id'))
                     ->searchable()
