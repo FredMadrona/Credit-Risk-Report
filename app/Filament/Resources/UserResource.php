@@ -7,6 +7,7 @@ use App\Filament\Resources\UserResource\RelationManagers;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use App\Models\User;
+use App\Models\Role;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,17 +15,31 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Spatie\Permission\Models\Role;
 use Filament\Forms\Components\Section;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
+use Filament\Forms\Components\Select;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
-    public static function canViewAny(): bool
-    {
-        return auth()->user()->hasRole('Admin');
-    }
+    
+   
+public static function canViewAny(): bool
+{
+    return self::userHasAccess();
+}
+
+public static function canAccess(): bool
+{
+    return self::userHasAccess();
+}
+
+private static function userHasAccess(): bool
+{
+    $allowedRoles = ['Admin'];
+    return Auth::user()?->roles()->whereIn('name', $allowedRoles)->exists() ?? false;
+}
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
@@ -67,12 +82,15 @@ class UserResource extends Resource
 
                 Section::make('Roles')
                 ->schema([
-                    Forms\Components\MultiSelect::make('roles')
+                    Select::make('roles')
                         ->label('Roles')
-                        ->relationship('roles', 'name') 
-                        ->required()
-                        ->preload(),
+                        ->options(Role::pluck('name', 'id')->toArray()) // Ensure correct pluck format
+                        ->multiple() // Allow multiple role selection
+                        ->searchable()
+                        ->preload() // Preload options for better performance
+                        ->relationship('roles', 'name') // Ensure proper many-to-many relationship
                 ]),
+            
         ]);
 }
 
@@ -85,10 +103,8 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('roles')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('Role')
-                    ->formatStateUsing(fn ($record) => $record->roles->pluck('name')->join(', '))
+                    Tables\Columns\TextColumn::make('roles.name')
+                    ->searchable()
                     ->badge(), 
             ])
             ->filters([

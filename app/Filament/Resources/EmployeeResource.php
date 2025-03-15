@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeResource extends Resource
 {
@@ -24,7 +25,26 @@ class EmployeeResource extends Resource
 {
     return 'Organization Management';
 }
+            public static function canViewAny(): bool
+            {
+                return self::userHasAccess();
+            }
 
+            public static function canAccess(): bool
+            {
+                return self::userHasAccess();
+            }
+
+            private static function userHasAccess(): bool
+            {
+                $allowedRoles = ['Admin','Credit Risk', 'IT Risk', 'Ops Risk'];
+                return Auth::user()?->roles()->whereIn('name', $allowedRoles)->exists() ?? false;
+            }
+
+            public static function canEdit($record): bool
+            {
+                return Auth::user()?->roles()->whereIn('name', ['Admin', 'Ops Risk'])->exists() ?? false;
+            }
 
     public static function form(Form $form): Form
     {
@@ -77,6 +97,7 @@ class EmployeeResource extends Resource
 
             ]),
             Forms\Components\DatePicker::make('birth_date')->required(),
+            Forms\Components\DatePicker::make('date_regularized')->required(),
             Forms\Components\DatePicker::make('hire_date')->required(),
         ]);    }
 
@@ -100,6 +121,12 @@ class EmployeeResource extends Resource
             Tables\Columns\TextColumn::make('department.name')
                 ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('job_position')
+                ->searchable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('birth_date')
+                ->searchable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('date_regularized')
                 ->searchable()
                 ->toggleable(isToggledHiddenByDefault: true),
         ])
