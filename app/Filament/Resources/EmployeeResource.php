@@ -58,6 +58,7 @@ class EmployeeResource extends Resource
                     ->relationship('branch', 'branch_name')
                     ->searchable()
                     ->preload()
+                    ->required()
                     ->createOptionForm([
                         Forms\Components\TextInput::make('name')
                             ->label('Name')
@@ -68,6 +69,7 @@ class EmployeeResource extends Resource
                     ->relationship('department', 'name')
                     ->searchable()
                     ->preload()
+                    ->required()
                     ->createOptionForm([
                         Forms\Components\TextInput::make('name')
                             ->label('Name')
