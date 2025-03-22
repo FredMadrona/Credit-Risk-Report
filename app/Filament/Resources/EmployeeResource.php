@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Section;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\Facades\Auth;
@@ -46,62 +47,98 @@ class EmployeeResource extends Resource
                 return Auth::user()?->roles()->whereIn('name', ['Admin', 'Ops Risk'])->exists() ?? false;
             }
 
-    public static function form(Form $form): Form
-    {
-        return $form
-        ->schema([
-            Forms\Components\TextInput::make('name')
-                ->label('Name')
-                ->required()
-                ->maxLength(255),
-            Forms\Components\Select::make('branch_id')
-                    ->relationship('branch', 'branch_name')
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->createOptionForm([
-                        Forms\Components\TextInput::make('name')
-                            ->label('Name')
-                            ->required()
-                            ->maxlength(255) 
-                    ]),
-                    Forms\Components\Select::make('department_id')
-                    ->relationship('department', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->createOptionForm([
-                        Forms\Components\TextInput::make('name')
-                            ->label('Name')
-                            ->required()
-                            ->maxlength(255) 
-                    ]),
+            public static function form(Form $form): Form
+            {
+                return $form
+                    ->schema([
+                        Section::make('Basic Information')
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->label('Name')
+                                    ->required()
+                                    ->maxLength(255)
+                            ])                     
+                            ->collapsible(),
 
-                    Forms\Components\Select::make('employee_status')
-                    ->required() 
-                    ->options([ 
-                    'Active' => 'Active',
-                    'Resigned' => 'Resigned',
-                    'Retired' => 'Retired',   
-                ]),
-                Forms\Components\Select::make('job_position')
-                ->required()
-                ->options([
-                'Associate' => 'Associate',
-                'Department Head' => 'Department Head',
-                'CEO' => 'CEO',
-                'COO' => 'COO',
-                'Vice President' => 'Vice President',
-                'Deputy Head' => 'Deputy Head',
-                'Area Head' => 'Area Head',
-                'Unit Head' => 'Unit Head',
-                'Vice President' => 'Vice President',
-
-            ]),
-            Forms\Components\DatePicker::make('birth_date')->required(),
-            Forms\Components\DatePicker::make('date_regularized')->required(),
-            Forms\Components\DatePicker::make('hire_date')->required(),
-        ]);    }
+                        Section::make('Work Details')
+                            ->schema([
+                                Forms\Components\Select::make('branch_id')
+                                    ->label('Branch')
+                                    ->relationship('branch', 'branch_name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('name')
+                                            ->label('Branch Name')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ]),
+                
+            
+                                Forms\Components\Select::make('department_id')
+                                    ->label('Department')
+                                    ->relationship('department', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('name')
+                                            ->label('Department Name')
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                            ])
+                             ->collapsed() ->columns(2),
+            
+                        Section::make('Employment Status')
+                            ->schema([
+                                Forms\Components\Select::make('employee_status')
+                                    ->label('Employee Status')
+                                    ->required()
+                                    ->options([
+                                        'Active' => 'Active',
+                                        'Resigned' => 'Resigned',
+                                        'Retired' => 'Retired',
+                                    ])
+                                
+                            ])
+                             ->collapsed(),
+            
+                        Section::make('Job Information')
+                            ->schema([
+                                Forms\Components\Select::make('job_position')
+                                    ->label('Job Position')
+                                    ->required()
+                                    ->options([
+                                        'Associate' => 'Associate',
+                                        'Department Head' => 'Department Head',
+                                        'CEO' => 'CEO',
+                                        'COO' => 'COO',
+                                        'Vice President' => 'Vice President',
+                                        'Deputy Head' => 'Deputy Head',
+                                        'Area Head' => 'Area Head',
+                                        'Unit Head' => 'Unit Head',
+                                    ])
+                                
+                            ])     ->collapsed(),
+            
+                        Section::make('Important Dates')
+                            ->schema([
+                                Forms\Components\DatePicker::make('birth_date')
+                                    ->label('Birth Date')
+                                    ->required(),
+            
+                                Forms\Components\DatePicker::make('date_regularized')
+                                    ->label('Date Regularized')
+                                    ->required(),
+            
+                                Forms\Components\DatePicker::make('hire_date')
+                                    ->label('Hire Date')
+                                    ->required()
+                            ])     ->collapsed() ->columns(3),
+                    ]);
+            }            
 
     public static function table(Table $table): Table
     {

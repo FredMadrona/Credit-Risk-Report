@@ -20,6 +20,7 @@ use Filament\Tables\Actions\ExportBulkAction;
 use App\Models\Client;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\Section;
 
 class RiskReportResource extends Resource
 {
@@ -53,84 +54,120 @@ class RiskReportResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('risk_number')
-                 ->label('Risk Number')
-                 ->dehydrated(false)
-                 ->disabled(),
-                Forms\Components\Select::make('client_id')
-                    ->label('Client Name')
-                    ->required()
-                    ->options(Client::query()->get()->pluck('full_name', 'id')),
-                Forms\Components\Select::make('type')
-                    ->required()
-                    ->options([
-                        'ICRR' => 'ICRR',
-                        'BRR' => 'BRR',
-                    ]),    
-                Forms\Components\TextInput::make('pn_number')
-                    ->label('PN Number')
-                    ->required(),
-                Forms\Components\Select::make('branch_id')
-                    ->relationship(name:'branch', titleAttribute:'branch_name')
-                    ->searchable()
-                    ->preload(),
-                Forms\Components\TextInput::make('segment')
-                    ->label('Segment')
-                    ->required(),
-                Forms\Components\TextInput::make('frp_class')
-                    ->label('FRP Class')
-                    ->required(),
-                Forms\Components\TextInput::make('applied_loan')
-                    ->label('Applied Loan')
-                    ->numeric()
-                    ->step(0.01)
-                    ->required(),
-                Forms\Components\DatePicker::make('date_rated')
-                    ->required()
-                    ->maxDate(now()),
-                Forms\Components\TextInput::make('score')
-                    ->label('Score')
-                    ->numeric()
-                    ->step(0.01)
-                    ->required(),
-                Forms\Components\Select::make('risk')
-                    ->required()
-                    ->options([
-                        'N/A' => 'N/A',
-                        'ICRR/BRR3' => 'ICRR/BRR3',
-                        'ICRR/BRR4' => 'ICRR/BRR4',
-                    ]),
-                Forms\Components\Select::make('risk_desc')
-                    ->required()
-                    ->options([
-                        'LOW RISK' => 'LOW RISK',
-                        'MODERATE RISK' => 'MODERATE RISK',
-                        'HIGH RISK' => 'HIGH RISK',
-                        'N/A' => 'N/A',
-                    ]),
-                Forms\Components\DatePicker::make('next_review_date')
-                    ->label('Next Review Date')
-                    ->required(),
+{
+    return $form
+        ->schema([
+            Section::make('General Information')
+                ->schema([
+                    Forms\Components\TextInput::make('risk_number')
+                        ->label('Risk Number')
+                        ->dehydrated(false)
+                        ->disabled(),
+
+                    Forms\Components\Select::make('client_id')
+                        ->label('Client Name')
+                        ->required()
+                        ->options(Client::query()->get()->pluck('full_name', 'id')),
+
+                    Forms\Components\Select::make('type')
+                        ->label('Type')
+                        ->required()
+                        ->options([
+                            'ICRR' => 'ICRR',
+                            'BRR' => 'BRR',
+                        ]),    
+
+                    Forms\Components\TextInput::make('pn_number')
+                        ->label('PN Number')
+                        ->required(),
+                ])->collapsible() ->columns(2),
+
+            Section::make('Branch & Classification')
+                ->schema([
+                    Forms\Components\Select::make('branch_id')
+                        ->label('Branch')
+                        ->relationship(name: 'branch', titleAttribute: 'branch_name')
+                        ->searchable()
+                        ->preload(),
+
+                    Forms\Components\TextInput::make('segment')
+                        ->label('Segment')
+                        ->required(),
+
+                    Forms\Components\TextInput::make('frp_class')
+                        ->label('FRP Class')
+                        ->required(),
+                ])->collapsed() ->columns(3),
+
+            Section::make('Loan & Rating Details')
+                ->schema([
+                    Forms\Components\TextInput::make('applied_loan')
+                        ->label('Applied Loan')
+                        ->numeric()
+                        ->step(0.01)
+                        ->required(),
+
+                    Forms\Components\DatePicker::make('date_rated')
+                        ->label('Date Rated')
+                        ->required()
+                        ->maxDate(now()),
+
+                    Forms\Components\TextInput::make('score')
+                        ->label('Score')
+                        ->numeric()
+                        ->step(0.01)
+                        ->required(),
+                ])->collapsed() ->columns(3),
+
+            Section::make('Risk Assessment')
+                ->schema([
+                    Forms\Components\Select::make('risk')
+                        ->label('Risk Level')
+                        ->required()
+                        ->options([
+                            'N/A' => 'N/A',
+                            'ICRR/BRR3' => 'ICRR/BRR3',
+                            'ICRR/BRR4' => 'ICRR/BRR4',
+                        ]),
+
+                    Forms\Components\Select::make('risk_desc')
+                        ->label('Risk Description')
+                        ->required()
+                        ->options([
+                            'LOW RISK' => 'LOW RISK',
+                            'MODERATE RISK' => 'MODERATE RISK',
+                            'HIGH RISK' => 'HIGH RISK',
+                            'N/A' => 'N/A',
+                        ]),
+
+                    Forms\Components\DatePicker::make('next_review_date')
+                        ->label('Next Review Date')
+                        ->required(),
+                ])->collapsed() ->columns(3),
+
+            Section::make('Approval & Remarks')
+                ->schema([
                     Forms\Components\Select::make('requested_by')
-                    ->label('Requested By')
-                    ->options(Employee::all()->pluck('name', 'id'))
-                    ->searchable()
-                    ->preload()
-                    ->nullable(),
-                
-                Forms\Components\Select::make('assessed_by')
-                    ->label('Assessed By')
-                    ->options(Employee::all()->pluck('name', 'id'))
-                    ->searchable()
-                    ->preload()
-                    ->nullable(),                
-                Forms\Components\Textarea::make('remarks')
-                    ->nullable(),
-                ]);
-    }
+                        ->label('Requested By')
+                        ->options(Employee::all()->pluck('name', 'id'))
+                        ->searchable()
+                        ->preload()
+                        ->nullable(),
+
+                    Forms\Components\Select::make('assessed_by')
+                        ->label('Assessed By')
+                        ->options(Employee::all()->pluck('name', 'id'))
+                        ->searchable()
+                        ->preload()
+                        ->nullable(),
+
+                    Forms\Components\Textarea::make('remarks')
+                        ->label('Remarks')
+                        ->nullable(),
+                ])->collapsed() ->columns(3),
+        ]);
+}
+
 
     public static function table(Table $table): Table
     {

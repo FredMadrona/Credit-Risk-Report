@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\Section;
 
 class BranchResource extends Resource
 {
@@ -49,41 +50,51 @@ class BranchResource extends Resource
 
 
 
-public static function form(Form $form): Form
-{
-    return $form
-        ->schema([
-            Forms\Components\TextInput::make('branch_name')
-                ->label('Branch Name')
-                ->required()
-                ->maxLength(255),
-
-            Forms\Components\TextInput::make('branch_code')
-                ->label('Branch Code')
-                ->required()
-                ->maxLength(10),
-
-            Forms\Components\TextInput::make('branch_address')
-                ->label('Address')
-                ->required(),
-
-            Forms\Components\TextInput::make('branch_phone')
-                ->label('Phone Number')
-                ->tel()
-                ->maxLength(20),
-
-            Forms\Components\TextInput::make('branch_email')
-                ->label('Email Address')
-                ->email()
-                ->maxLength(255),
-
-                Forms\Components\Select::make('branch_manager_id')
-                ->label('Branch Manager')
-                ->options(Employee::all()->pluck('name', 'id'))
-                ->searchable()
-                ->required(),                
-        ]);
-}
+        public static function form(Form $form): Form
+        {
+            return $form
+                ->schema([
+                    Section::make('Branch Details')
+                        ->schema([
+                            Forms\Components\TextInput::make('branch_name')
+                                ->label('Branch Name')
+                                ->required()
+                                ->maxLength(255),
+        
+                            Forms\Components\TextInput::make('branch_code')
+                                ->label('Branch Code')
+                                ->required()
+                                ->maxLength(10),
+                        ])->columns(2) ->collapsible(),
+        
+                    Section::make('Contact Information')
+                        ->schema([
+                            Forms\Components\TextInput::make('branch_address')
+                                ->label('Address')
+                                ->required(),
+        
+                            Forms\Components\TextInput::make('branch_phone')
+                                ->label('Phone Number')
+                                ->tel()
+                                ->maxLength(20),
+        
+                            Forms\Components\TextInput::make('branch_email')
+                                ->label('Email Address')
+                                ->email()
+                                ->maxLength(255),
+                        ]) ->columns(3) ->collapsible(),
+        
+                    Section::make('Management')
+                        ->schema([
+                            Forms\Components\Select::make('branch_manager_id')
+                                ->label('Branch Manager')
+                                ->options(Employee::all()->pluck('name', 'id'))
+                                ->searchable()
+                                ->required(),
+                        ])->collapsible(),
+                ]);
+        }
+        
 
 
 public static function table(Table $table): Table

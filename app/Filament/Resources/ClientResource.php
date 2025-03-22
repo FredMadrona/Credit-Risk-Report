@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Section;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,27 +48,39 @@ public static function canViewAny(): bool
         }
 
 
-
-public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('first_name')
-                    ->label('First Name')
-                    ->required(),
-                Forms\Components\TextInput::make('middle_name')
-                    ->label('Middle Name'),
-                Forms\Components\TextInput::make('last_name')
-                    ->label('Last Name')
-                    ->required(),
-                Forms\Components\DatePicker::make('birthday')
-                    ->required()
-                    ->maxDate(now()),
-                Forms\Components\DatePicker::make('applied_date')
-                    ->required()
-                    ->maxDate(now()),
-            ]);
-    }
+        public static function form(Form $form): Form
+        {
+            return $form
+                ->schema([
+                    Section::make('Personal Information')
+                        ->schema([
+                            Forms\Components\TextInput::make('first_name')
+                                ->label('First Name')
+                                ->required(),
+        
+                            Forms\Components\TextInput::make('middle_name')
+                                ->label('Middle Name'),
+        
+                            Forms\Components\TextInput::make('last_name')
+                                ->label('Last Name')
+                                ->required(),
+                        ])     ->columns(3),
+        
+                    Section::make('Important Dates')
+                        ->schema([
+                            Forms\Components\DatePicker::make('birthday')
+                                ->label('Birthday')
+                                ->required()
+                                ->maxDate(now()),
+        
+                            Forms\Components\DatePicker::make('applied_date')
+                                ->label('Applied Date')
+                                ->required()
+                                ->maxDate(now()),
+                        ]) ->columns(2) ->collapsed(),
+                ]);
+        }
+        
 
     public static function table(Table $table): Table
     {
