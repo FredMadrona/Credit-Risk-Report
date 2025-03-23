@@ -21,7 +21,8 @@ use App\Models\Client;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Section;
-
+use Illuminate\Support\Facades\DB;
+use Filament\Tables\Columns\TextColumn;
 class RiskReportResource extends Resource
 {
     public static function getNavigationGroup(): ?string
@@ -173,26 +174,29 @@ class RiskReportResource extends Resource
     {
         return $table
               ->columns([
-                Tables\Columns\TextColumn::make('risk_number')
+                TextColumn::make('risk_number')
                 ->searchable()
                 ->sortable(),
-                Tables\Columns\TextColumn::make('client.full_name')
-                ->sortable(),
-                Tables\Columns\TextColumn::make('branch.branch_name')
+                TextColumn::make('client.full_name')
+                ->sortable(query: function ($query, $direction) {
+                    $query->join('clients', 'risk_reports.client_id', '=', 'clients.id')
+                        ->orderBy(DB::raw("CONCAT(clients.first_name, ' ', clients.last_name)"), $direction);
+                }),
+                TextColumn::make('branch.branch_name')
                 ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('date_rated')
+                TextColumn::make('date_rated')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('next_review_date')
+                TextColumn::make('next_review_date')
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->sortable(),
-                Tables\Columns\TextColumn::make('employee.employee_name')
+                TextColumn::make('employee.employee_name')
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->sortable(),
-                Tables\Columns\TextColumn::make('assessed_by')
+                TextColumn::make('assessed_by')
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->sortable(),
-                Tables\Columns\TextColumn::make('applied_loan')
+                TextColumn::make('applied_loan')
                 ->formatStateUsing(fn ($state) => number_format($state, 2))
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->sortable(),

@@ -99,13 +99,16 @@ private static function userHasAccess(): bool
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('email')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                     Tables\Columns\TextColumn::make('roles.name')
                     ->searchable()
-                    ->badge(), 
+                    ->badge()
+                    ->sortable(),
             ])
             ->filters([
                 //

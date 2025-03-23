@@ -61,7 +61,8 @@ public static function canEdit($record): bool
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                ->searchable(),
+                ->searchable()
+                ->sortable(),
             ])
             ->filters([
                 //
