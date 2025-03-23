@@ -24,8 +24,8 @@ class LatestRiskReport extends BaseWidget
             )
             ->columns([
                 TextColumn::make('risk_number')->label('Risk Number'),
-                TextColumn::make('created_at')
-                    ->label('Date Created')
+                TextColumn::make('date_rated')
+                    ->label('Date & Time Rated')
                     ->dateTime('M d, Y H:i'),
                
             ]);
