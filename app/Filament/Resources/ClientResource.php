@@ -14,7 +14,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Section;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\DateColumn;
 class ClientResource extends Resource
 {
     protected static ?string $model = Client::class;
@@ -54,26 +56,26 @@ public static function canViewAny(): bool
                 ->schema([
                     Section::make('Personal Information')
                         ->schema([
-                            Forms\Components\TextInput::make('first_name')
+                            TextInput::make('first_name')
                                 ->label('First Name')
                                 ->required(),
         
-                            Forms\Components\TextInput::make('middle_name')
+                            TextInput::make('middle_name')
                                 ->label('Middle Name'),
         
-                            Forms\Components\TextInput::make('last_name')
+                            TextInput::make('last_name')
                                 ->label('Last Name')
                                 ->required(),
                         ])     ->columns(3),
         
                     Section::make('Important Dates')
                         ->schema([
-                            Forms\Components\DatePicker::make('birthday')
+                            DatePicker::make('birthday')
                                 ->label('Birthday')
                                 ->required()
                                 ->maxDate(now()),
         
-                            Forms\Components\DatePicker::make('applied_date')
+                            DatePicker::make('applied_date')
                                 ->label('Applied Date')
                                 ->required()
                                 ->maxDate(now()),
@@ -86,19 +88,23 @@ public static function canViewAny(): bool
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('full_name')
+                TextColumn::make('full_name')
                 ->label('Full Name')
                 ->formatStateUsing(fn ($record) => $record->first_name . ' ' . $record->last_name)
                 ->searchable(query: function ($query, $search) {
                     $query->where('first_name', 'like', "%{$search}%")
                           ->orWhere('last_name', 'like', "%{$search}%");
+                })    ->sortable(query: function ($query, $direction) {
+                    $query->orderBy(DB::raw("CONCAT(first_name, ' ', last_name)"), $direction);
                 }),
-                Tables\Columns\TextColumn::make('birthday')
+                TextColumn::make('birthday')
                     ->date()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('applied_date')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
+                TextColumn::make('applied_date')
                     ->date()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -111,8 +117,8 @@ public static function canViewAny(): bool
                 
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                  Tables\Actions\BulkActionGroup::make([
+                  Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

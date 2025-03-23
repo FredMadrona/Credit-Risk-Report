@@ -145,7 +145,8 @@ class EmployeeResource extends Resource
         return $table
         ->columns([
             Tables\Columns\TextColumn::make('name')
-            ->searchable(),
+            ->searchable()
+            ->sortable(),
             Tables\Columns\TextColumn::make('employee_status')
             ->badge()
             ->searchable()
@@ -154,20 +155,26 @@ class EmployeeResource extends Resource
                 'Resigned' => 'danger',
                 'Retired' => 'warning',
                 default => 'primary',
-            }),
+            })
+            ->sortable(),
             Tables\Columns\TextColumn::make('branch.branch_name')
-                ->toggleable(isToggledHiddenByDefault: true),
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->sortable(),
             Tables\Columns\TextColumn::make('department.name')
-                ->toggleable(isToggledHiddenByDefault: true),
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->sortable(),
             Tables\Columns\TextColumn::make('job_position')
                 ->searchable()
-                ->toggleable(isToggledHiddenByDefault: true),
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->sortable(),
             Tables\Columns\TextColumn::make('birth_date')
                 ->searchable()
-                ->toggleable(isToggledHiddenByDefault: true),
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->sortable(),
             Tables\Columns\TextColumn::make('date_regularized')
                 ->searchable()
-                ->toggleable(isToggledHiddenByDefault: true),
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->sortable(),
         ])
             ->filters([
                SelectFilter::make('employee_status')
