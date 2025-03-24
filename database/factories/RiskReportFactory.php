@@ -27,14 +27,14 @@ class RiskReportFactory extends Factory
     public function definition(): array
     {
         return [
-            'client_id' => Client::factory(), // Generates a new client or use existing
+            'client_id' => Client::factory(), 
             'branch_id' => Branch::inRandomOrder()->first()->id ?? Branch::factory(),
             'type' => $this->faker->randomElement(['ICRR', 'BRR']),
             'pn_number' => strtoupper($this->faker->bothify('PN-###-####')),
             'segment' => $this->faker->randomElement(['Retail', 'Corporate']),
             'frp_class' => $this->faker->randomElement(['A', 'B', 'C']),
-            'applied_loan' => $this->faker->randomFloat(2, 1000, 500000), // Loan amount
-            'date_rated' => $this->faker->dateTimeBetween('2020-01-01', '2025-12-31')->format('Y-m-d'),
+            'applied_loan' => $this->faker->randomFloat(2, 1000, 500000), 
+            'date_rated' => $this->faker->dateTimeBetween('2020-01-01', now()->format('Y-m-d'))->format('Y-m-d'),
             'score' => $this->faker->numberBetween(300, 850),
             'risk' => $this->faker->randomElement(['ICRR/BRR3', 'ICRR/BRR4', 'ICRR/BRR5']),
             'risk_desc' => $this->faker->randomElement(['LOW RISK', 'MODERATE RISK', 'HIGH RISK', 'N/A']),

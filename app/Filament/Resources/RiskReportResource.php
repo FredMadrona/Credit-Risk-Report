@@ -202,25 +202,27 @@ class RiskReportResource extends Resource
                 ->sortable(),
             
             ])
-            ->filters([ 
-                
-                Filter::make('created_at')
-                                ->form([
-                                    Forms\Components\DatePicker::make('rated_from'),
-                                    Forms\Components\DatePicker::make('rated_until'),
-                                ])
-                                ->query(function (Builder $query, array $data): Builder {
-                                    return $query
-                                        ->when(
-                                            $data['rated_from'],
-                                            fn (Builder $query, $date): Builder => $query->whereDate('date_rated', '>=', $date),
-                                        )
-                                        ->when(
-                                            $data['rated_until'],
-                                            fn (Builder $query, $date): Builder => $query->whereDate('date_rated', '<=', $date),
-                                        );
-                                }),
-        ])
+            ->filters([
+                Filter::make('year')
+                    ->form([
+                        Forms\Components\Select::make('year')
+                            ->options(
+                                array_combine(
+                                    range(now()->year, now()->year - 10), // Last 10 years
+                                    range(now()->year, now()->year - 10)
+                                )
+                            )
+                            ->searchable()
+                            ->placeholder('Select Year'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['year'],
+                            fn (Builder $query, $year) => $query->whereYear('date_rated', $year)
+                        );
+                    }),
+            ])
+            
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

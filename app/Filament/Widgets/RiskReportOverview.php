@@ -12,38 +12,45 @@ class RiskReportOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        // Get the current year dynamically
         $currentYear = now()->year;
-
-        // Get the last 3 years dynamically and reverse the order
-        $years = [$currentYear, $currentYear - 1, $currentYear - 2];
-
+    
+        $years = [$currentYear, $currentYear - 1, $currentYear - 2, $currentYear - 3];
+    
+        $loansPerYear = RiskReport::selectRaw('EXTRACT(YEAR FROM date_rated) as year, SUM(applied_loan) as total_loan')
+            ->whereRaw('EXTRACT(YEAR FROM date_rated) >= ?', [$currentYear - 3]) // Fetch 4 years
+            ->groupBy('year')
+            ->pluck('total_loan', 'year')
+            ->toArray();
+    
         $stats = [];
-
+    
         foreach ($years as $index => $year) {
-            $currentLoan = RiskReport::whereYear('date_rated', $year)->sum('applied_loan');
-            $previousLoan = $index < count($years) - 1 
-                ? RiskReport::whereYear('date_rated', $years[$index + 1])->sum('applied_loan') 
-                : null;
-
+            // Stop after displaying the latest 3 years
+            if ($index >= 3) break; 
+    
+            $currentLoan = $loansPerYear[$year] ?? 0;
+            $previousLoan = $years[$index + 1] ?? null;
+    
             $arrowIcon = null;
             $changePercentage = null;
-            if (!is_null($previousLoan) && $previousLoan > 0) {
-                $change = (($currentLoan - $previousLoan) / $previousLoan) * 100;
+    
+            if (!is_null($previousLoan) && isset($loansPerYear[$previousLoan])) {
+                $change = (($currentLoan - $loansPerYear[$previousLoan]) / $loansPerYear[$previousLoan]) * 100;
                 $changePercentage = number_format(abs($change), 2) . '%';
                 $arrowIcon = $change > 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down';
             }
-
-       
+    
             $stats[] = Stat::make(
                 "Total Applied Loan $year",
                 '₱' . number_format($currentLoan, 2)
             )
-            ->description($previousLoan !== null ? ($change > 0 ? "+$changePercentage" : "-$changePercentage") : 'No Data')
-            ->descriptionIcon($arrowIcon)
-            ->color($change > 0 ? 'success' : ($change < 0 ? 'danger' : 'gray')); 
+            ->description($previousLoan !== null ? ($change > 0 ? "+$changePercentage" : "-$changePercentage") : "0%")
+            ->descriptionIcon($arrowIcon ?? 'heroicon-m-minus-circle')
+            ->color($change > 0 ? 'success' : ($change < 0 ? 'danger' : 'gray'));
         }
-
+    
         return $stats;
     }
+    
+
 }
