@@ -25,7 +25,13 @@ class RiskReportChart extends ChartWidget
                 [
                     'label' => 'Number of Risk Reports',
                     'data' => $data,
-                    'backgroundColor' => ['#4F46E5', '#16A34A', '#DC2626', '#FACC15', '#8B5CF6'], 
+                    'backgroundColor' => '#3490dc',
+                    'borderColor' => '#3490dc',
+                    'borderWidth' => 5,
+                    'pointBackgroundColor' => '#A08963',
+                    'pointBorderColor' => '#A08963',
+                    'pointBorderWidth' => 10,
+                    'pointHoverRadius' => 10,
                 ],
             ],
         ];
