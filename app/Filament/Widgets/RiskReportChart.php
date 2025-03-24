@@ -13,12 +13,10 @@ class RiskReportChart extends ChartWidget
 
     protected function getData(): array
     {
-        
         $currentYear = now()->year;
-        
-        $years = [$currentYear - 2, $currentYear - 1, $currentYear];
 
-      
+        $years = range($currentYear - 4, $currentYear);
+
         $data = array_map(fn ($year) => RiskReport::whereYear('date_rated', $year)->count(), $years);
 
         return [
@@ -27,7 +25,7 @@ class RiskReportChart extends ChartWidget
                 [
                     'label' => 'Number of Risk Reports',
                     'data' => $data,
-                    'backgroundColor' => ['#4F46E5', '#16A34A', '#DC2626'],
+                    'backgroundColor' => ['#4F46E5', '#16A34A', '#DC2626', '#FACC15', '#8B5CF6'], 
                 ],
             ],
         ];
@@ -35,6 +33,6 @@ class RiskReportChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'bar';
+        return 'line';
     }
 }

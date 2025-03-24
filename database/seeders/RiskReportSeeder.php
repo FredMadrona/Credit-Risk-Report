@@ -8,6 +8,6 @@ class RiskReportSeeder extends Seeder
 {
     public function run()
     {
-        RiskReport::factory()->count(20)->create();
+        RiskReport::factory()->count(100)->create();
     }
 }
