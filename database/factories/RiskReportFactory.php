@@ -41,6 +41,7 @@ class RiskReportFactory extends Factory
             'next_review_date' => $this->faker->date(),
             'requested_by' => Employee::inRandomOrder()->first()->id ?? Employee::factory(),
             'assessed_by' => Employee::inRandomOrder()->first()->id ?? Employee::factory(),
+            'status' => $this->faker->randomElement(['Approved', 'Disapproved', 'For Review']),
             'remarks' => $this->faker->optional()->sentence(),
             'created_at' => now(),
             'updated_at' => now(),
