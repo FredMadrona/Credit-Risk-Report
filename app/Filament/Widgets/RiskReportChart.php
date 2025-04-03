@@ -19,10 +19,10 @@ class RiskReportChart extends ChartWidget
     protected function getFilters(): ?array
     {
         return [
-            'today' => 'Today',
-            'week' => 'Last Week',
-            'month' => 'Last Month',
-            'year' => 'This Year',
+            'day' => 'Day',
+            'week' => 'Week',
+            'month' => 'Month',
+            'year' => 'Year',
         ];
     }
 
@@ -33,21 +33,92 @@ class RiskReportChart extends ChartWidget
         $query = RiskReport::query();
 
         switch ($activeFilter) {
-            case 'today':
-                $query->whereDate('date_rated', Carbon::today());
-                $labels = ['Today'];
-                break;
+      
 
-            case 'week':
-                $query->whereBetween('date_rated', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
-                $labels = ['This Week'];
-                break;
+                case 'day':
+                    $labels = [];
+                    $data = [];
+                
+                    for ($i = 6; $i >= 0; $i--) { // Loop through last 7 days
+                        $date = Carbon::now()->subDays($i);
+                        $labels[] = $date->format('l'); // Gets the full day name (e.g., "Monday")
+                        $data[] = RiskReport::whereDate('date_rated', $date)->count();
+                    }
+                
+                    return [
+                        'labels' => $labels,
+                        'datasets' => [
+                            [
+                                'label' => 'Number of Risk Reports',
+                                'data' => $data,
+                                'backgroundColor' => '#3490dc',
+                                'borderColor' => '#3490dc',
+                                'borderWidth' => 5,
+                                'pointBackgroundColor' => '#A08963',
+                                'pointBorderColor' => '#A08963',
+                                'pointBorderWidth' => 10,
+                                'pointHoverRadius' => 10,
+                            ],
+                        ],
+                    ];
 
-            case 'month':
-                $query->whereMonth('date_rated', Carbon::now()->month)
-                      ->whereYear('date_rated', Carbon::now()->year);
-                $labels = ['This Month'];
-                break;
+                    case 'week':
+                        $labels = [];
+                        $data = [];
+                    
+                        for ($i = 3; $i >= 0; $i--) { // Loop through last 4 weeks
+                            $startOfWeek = Carbon::now()->subWeeks($i)->startOfWeek();
+                            $endOfWeek = Carbon::now()->subWeeks($i)->endOfWeek();
+                            $labels[] = $startOfWeek->format('M d') . ' - ' . $endOfWeek->format('M d'); // Example: "Mar 04 - Mar 10"
+                            $data[] = RiskReport::whereBetween('date_rated', [$startOfWeek, $endOfWeek])->count();
+                        }
+                    
+                        return [
+                            'labels' => $labels,
+                            'datasets' => [
+                                [
+                                    'label' => 'Number of Risk Reports',
+                                    'data' => $data,
+                                    'backgroundColor' => '#3490dc',
+                                    'borderColor' => '#3490dc',
+                                    'borderWidth' => 5,
+                                    'pointBackgroundColor' => '#A08963',
+                                    'pointBorderColor' => '#A08963',
+                                    'pointBorderWidth' => 10,
+                                    'pointHoverRadius' => 10,
+                                ],
+                            ],
+                        ];
+
+
+                    case 'month':
+                        $labels = [];
+                        $data = [];
+                    
+                        for ($i = 5; $i >= 0; $i--) { // Loop through last 6 months
+                            $date = Carbon::now()->subMonths($i);
+                            $labels[] = $date->format('M Y'); // Example: "Jan 2024", "Feb 2024"
+                            $data[] = RiskReport::whereYear('date_rated', $date->year)
+                                                ->whereMonth('date_rated', $date->month)
+                                                ->count();
+                        }
+                    
+                        return [
+                            'labels' => $labels,
+                            'datasets' => [
+                                [
+                                    'label' => 'Number of Risk Reports',
+                                    'data' => $data,
+                                    'backgroundColor' => '#3490dc',
+                                    'borderColor' => '#3490dc',
+                                    'borderWidth' => 5,
+                                    'pointBackgroundColor' => '#A08963',
+                                    'pointBorderColor' => '#A08963',
+                                    'pointBorderWidth' => 10,
+                                    'pointHoverRadius' => 10,
+                                ],
+                            ],
+                        ];
 
             case 'year':
             default:

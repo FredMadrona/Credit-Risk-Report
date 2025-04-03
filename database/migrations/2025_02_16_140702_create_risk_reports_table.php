@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->foreignId('requested_by')->nullable()->constrained('employees')->onDelete('set null');
             $table->foreignId('assessed_by')->nullable()->constrained('employees')->onDelete('set null');
             $table->text('remarks')->nullable();
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }
