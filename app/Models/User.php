@@ -4,12 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Role;
-class User extends Authenticatable
+
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -24,6 +27,10 @@ class User extends Authenticatable
         'password',
 
     ];
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return str_ends_with($this->email, '@example.com') && $this->hasVerifiedEmail();
+    }
 
     /**
      * The attributes that should be hidden for serialization.

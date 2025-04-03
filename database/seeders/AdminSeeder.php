@@ -21,9 +21,14 @@ class AdminSeeder extends Seeder
             ]
         );
 
-        // Attach the role to the user
+        // Attach the role to the user if not already attached
         if (!$user->roles()->where('name', 'Admin')->exists()) {
             $user->roles()->attach($adminRole->id);
+        }
+
+        // Mark the email as verified
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
         }
 
         echo "Admin user seeded successfully! ✅\n";

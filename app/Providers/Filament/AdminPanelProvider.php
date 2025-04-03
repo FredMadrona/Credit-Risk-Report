@@ -61,14 +61,15 @@ class AdminPanelProvider extends PanelProvider
     }
 
     public function canAccessPanel(): bool
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        if (!$user) {
-            return false; // Deny access if the user is not logged in
-        }
-
-        // Allow access only for specific roles
-        return in_array($user->roles, ['Admin', 'Credit Risk', 'IT Risk', 'Ops Risk']);
+    if (!$user) {
+        return false; // Deny access if the user is not logged in
     }
+
+    // Check if the user has any of the allowed roles
+    return $user->roles()->whereIn('name', ['Admin', 'Credit Risk', 'IT Risk', 'Ops Risk'])->exists();
+}
+
 }
