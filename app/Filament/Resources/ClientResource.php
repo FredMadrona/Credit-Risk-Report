@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\DateColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 class ClientResource extends Resource
 {
     protected static ?string $model = Client::class;
