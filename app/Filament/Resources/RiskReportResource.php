@@ -178,24 +178,28 @@ class RiskReportResource extends Resource
                 ->searchable()
                 ->sortable(),
                 TextColumn::make('client.full_name')
-                ->sortable(query: function ($query, $direction) {
-                    $query->join('clients', 'risk_reports.client_id', '=', 'clients.id')
-                        ->orderBy(DB::raw("CONCAT(clients.first_name, ' ', clients.last_name)"), $direction);
-                }),
+                ->label('Client Name')
+                ->searchable(['first_name', 'last_name']) 
+                ->sortable(['last_name']),
                 TextColumn::make('branch.branch_name')
-                ->toggleable(isToggledHiddenByDefault: true),
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->sortable(),
                 TextColumn::make('date_rated')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('next_review_date')
                 ->toggleable(isToggledHiddenByDefault: true)
                 ->sortable(),
-                TextColumn::make('employee.employee_name')
+                TextColumn::make('requestedBy.name')
+                ->label('Requested By')
                 ->toggleable(isToggledHiddenByDefault: true)
-                ->sortable(),
-                TextColumn::make('assessed_by')
+                ->sortable()
+                ->searchable(),
+                TextColumn::make('assessedBy.name')
+                ->label('Assessed By')
                 ->toggleable(isToggledHiddenByDefault: true)
-                ->sortable(),
+                ->sortable()
+                ->searchable(),
                 TextColumn::make('applied_loan')
                 ->formatStateUsing(fn ($state) => number_format($state, 2))
                 ->toggleable(isToggledHiddenByDefault: true)
