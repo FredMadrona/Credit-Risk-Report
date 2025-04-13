@@ -62,7 +62,11 @@ private static function userHasAccess(): bool
                     Forms\Components\TextInput::make('email')
                         ->label('Email')
                         ->email()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->rules([
+                            'regex:/^[A-Za-z0-9._%+-]+@example\.com$/i', // ✅ only allow example.com emails
+                        ])
+                        ->helperText('Only emails ending in @example.com are allowed'),
 
                     Forms\Components\TextInput::make('password')
                         ->label('Password')
