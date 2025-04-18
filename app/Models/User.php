@@ -11,9 +11,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Role;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class User extends Authenticatable implements FilamentUser, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -30,7 +29,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     ];
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, '@example.com') && $this->hasVerifiedEmail();
+        return str_ends_with($this->email, '@example.com');
     }
 
     /**
