@@ -17,3 +17,8 @@ Route::get('/', function () {
     return redirect()->route('filament.admin.auth.login');
 });
 
+
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
