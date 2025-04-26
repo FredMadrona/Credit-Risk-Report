@@ -4,19 +4,21 @@ namespace App\Filament\Pages\Auth;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Pages\Auth\EditProfile as BaseEditProfile;
+use Filament\Pages\Auth\Register as BaseRegistration;
 
-class EditProfile extends BaseEditProfile
+
+
+class UserRegistration extends BaseRegistration
 {
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                $this->getNameFormComponent(),
+                $this->getNameFormComponent(), 
                 $this->getEmailFormComponent()
-                    ->required() 
-                    ->email()    
-                    ->rule('ends_with:@example.com', 'Email must end with @example.com'), 
+                    ->required()
+                    ->email()
+                    ->rule('ends_with:@example.com'), 
                 $this->getPasswordFormComponent(),
                 $this->getPasswordConfirmationFormComponent(),
             ]);

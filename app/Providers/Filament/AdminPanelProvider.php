@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 use App\Filament\Pages\Auth\EditProfile;
+use App\Filament\Pages\Auth\UserRegistration;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Illuminate\Support\Facades\Auth;
 use Filament\Http\Middleware\Authenticate;
@@ -21,6 +22,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 
+
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -30,9 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->passwordReset()
-            ->registration()
-            ->emailVerification()
+            ->registration(UserRegistration::class)
             ->profile(EditProfile::class)
             ->colors([
                 'primary' => Color::Amber,
@@ -59,7 +59,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                EnsureEmailIsVerified::class,
 
             ]);
     }
