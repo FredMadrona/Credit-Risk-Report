@@ -20,7 +20,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
-
+use App\Filament\Pages\Auth\UserRegistration;
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -30,8 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->passwordReset()
-            ->registration()
+            ->registration(UserRegistration::class)
             ->emailVerification()
             ->profile(EditProfile::class)
             ->colors([
