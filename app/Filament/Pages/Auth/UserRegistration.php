@@ -2,38 +2,25 @@
 
 namespace App\Filament\Pages\Auth;
 
-use Filament\Pages\Auth\Registration as BaseRegistration;
-use Illuminate\Support\Str;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Pages\Auth\Register as BaseRegistration;
+
+
 
 class UserRegistration extends BaseRegistration
 {
-    protected function getForm(): Form
+    public function form(Form $form): Form
     {
-        return Form::make()
+        return $form
             ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->label('Name'),
-
-                TextInput::make('email')
+                $this->getNameFormComponent(), 
+                $this->getEmailFormComponent()
                     ->required()
                     ->email()
-                    ->endsWith('@example.com')
-                    ->unique('users', 'email')
-                    ->label('Email'),
-
-                TextInput::make('password')
-                    ->required()
-                    ->password()
-                    ->label('Password'),
-
-                TextInput::make('passwordConfirmation')
-                    ->required()
-                    ->password()
-                    ->label('Confirm Password')
-                    ->same('password'),
+                    ->rule('ends_with:@example.com'), 
+                $this->getPasswordFormComponent(),
+                $this->getPasswordConfirmationFormComponent(),
             ]);
     }
 }
