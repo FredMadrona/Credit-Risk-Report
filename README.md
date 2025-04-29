@@ -64,7 +64,7 @@ For **production deployment**:
 php artisan config:cache
 ```
 - Set up a **web server** (e.g., Nginx or Apache) if needed.  
-- This project is available at -> http://creditreportsdashboard.great-site.net/
+- This project is available at -> https://creditreportsdashboard.great-site.net/
 
 ---
 ## 🔒 Security & Best Practices
